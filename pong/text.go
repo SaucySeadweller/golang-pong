@@ -86,7 +86,7 @@ func BigTextDraw(state GameState, color color.Color, screen *ebiten.Image) {
 func TextDraw(state GameState, color color.Color, screen *ebiten.Image) {
 	screenWidth, screenHeight := screen.Size()
 	message := []string{}
-	if state == Play || state == Key {
+	if state == Play || state == Key || state == Setup {
 		message = append(message, "PONG")
 	}
 	for i, length := range message {

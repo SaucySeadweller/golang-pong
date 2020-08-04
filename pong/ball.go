@@ -63,11 +63,11 @@ func (b *Ball) Update(screen *ebiten.Image, playerPaddle *Paddle, aiPaddle *Padd
 		b.Y = b.Radius
 	}
 
-	if b.X-b.Radius < aiPaddle.Y+float64(aiPaddle.Width/2) &&
+	if b.X-b.Radius < playerPaddle.X+float64(playerPaddle.Width/2) &&
 		b.Y > playerPaddle.Y-float64(playerPaddle.Length/2) &&
 		b.Y < playerPaddle.Y+float64(playerPaddle.Length/2) {
 		b.VelX = -b.VelX
-		b.X = playerPaddle.Y + float64(playerPaddle.Width/2) + b.Radius
+		b.X = playerPaddle.X + float64(playerPaddle.Width/2) + b.Radius
 	} else if b.X+b.Radius > aiPaddle.X-float64(aiPaddle.Width/2) &&
 		b.Y > aiPaddle.Y-float64(aiPaddle.Length/2) &&
 		b.Y < aiPaddle.Y+float64(aiPaddle.Length/2) {
@@ -79,15 +79,8 @@ func (b *Ball) Update(screen *ebiten.Image, playerPaddle *Paddle, aiPaddle *Padd
 
 //Draw draws the ball
 func (b *Ball) Draw(screen *ebiten.Image) {
-	ball := &ebiten.DrawImageOptions{}
-	ball.GeoM.Translate(b.X, b.Y)
+	ballOptions := &ebiten.DrawImageOptions{}
+	ballOptions.GeoM.Translate(b.X, b.Y)
 	b.Ball.Fill(PaddleBall)
-	screen.DrawImage(b.Ball, ball)
-}
-
-//BallPlay sets the ball gamestate
-func (b *Ball) BallPlay() {
-	if b.InPlay != Play {
-		b.InPlay = Play
-	}
+	screen.DrawImage(b.Ball, ballOptions)
 }

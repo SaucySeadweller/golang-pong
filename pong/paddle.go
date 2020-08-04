@@ -3,13 +3,11 @@ package pong
 import (
 	"image/color"
 	"log"
-	"strconv"
 
 	"golang.org/x/image/font"
 
 	"github.com/hajimehoshi/ebiten"
 	"github.com/hajimehoshi/ebiten/inpututil"
-	"github.com/hajimehoshi/ebiten/text"
 )
 
 type currentScore struct {
@@ -87,7 +85,7 @@ func (p *Paddle) Update(screen *ebiten.Image) {
 	if p.Y-float64(p.Length/2) < 0 {
 		p.Y = float64(1 + p.Length/2)
 	} else if p.Y+float64(p.Length/2) > float64(screenHeight) {
-		p.Y = float64(-p.Length/2 - 1)
+		p.Y = float64(screenHeight - p.Length/2 - 1)
 	}
 }
 
@@ -98,33 +96,18 @@ func (p *Paddle) Draw(screen *ebiten.Image, f font.Face) {
 	p.Paddle.Fill(color.White)
 	screen.DrawImage(p.Paddle, paddle)
 
-	s := strconv.Itoa(p.CurrentScore.score)
-	text.Draw(screen, s, f, int(p.CurrentScore.x), int(p.CurrentScore.y), color.White)
-	if p.CurrentScore.score != p.Score && p.CurrentScore.print {
-		p.CurrentScore.print = false
-	}
-	if p.CurrentScore.score == 0 && !p.CurrentScore.print {
-		p.CurrentScore.x = (p.X + (Center(screen).X-p.X)/2)
-		p.CurrentScore.y = (2 * 20)
-	}
-	if (p.CurrentScore.score == 0 || p.CurrentScore.score != p.Score) && !p.CurrentScore.print {
-		p.CurrentScore.score = p.Score
-		p.CurrentScore.print = true
-	}
-
 }
 
 //PaddleControls defines the InPlay actions of the paddles
 func (p *Paddle) PaddleControls(screen *ebiten.Image) {
 	var err error
-	collision := &ebiten.DrawImageOptions{}
-	collision.GeoM.Translate(p.X, p.Y)
-	if err = screen.DrawImage(draw, collision); err != nil {
+	Opts := &ebiten.DrawImageOptions{}
+	Opts.GeoM.Translate(p.X, p.Y)
+	if err = screen.DrawImage(draw, Opts); err != nil {
 		log.Print(err)
 	}
 }
 
-//AI does the thing
 func (p *Paddle) AI(b *Ball) {
 	p.Y = b.Y
 }
