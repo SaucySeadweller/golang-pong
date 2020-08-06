@@ -14,16 +14,12 @@ const (
 	Setup GameState = iota
 	//Play is the game state while playing
 	Play
-	//Stop is the gamestate while not playing
-	Stop
+	//Pause is the gamestate while not playing
+	Pause
 	//GameOver is the state when the game ends
 	GameOver
 	//Key is the state while controlling
 	Key
-)
-
-var (
-	draw *ebiten.Image
 )
 
 //Ball defines the attributes of the ball entity
@@ -34,7 +30,6 @@ type Ball struct {
 	AccelY int
 	VelX   float64
 	VelY   float64
-	InPlay GameState
 	Ball   *ebiten.Image
 	Color  color.Color
 }
@@ -45,7 +40,8 @@ const (
 	//BallVelX determines the starting velocity of the ball across the X axis
 	BallVelX = 2
 	//BallVelY determines the starting velocity of the ball across the Y axis
-	BallVelY = 2
+	BallVelY  = 2
+	BallStart = 50
 )
 
 //Update updates the acions on screen

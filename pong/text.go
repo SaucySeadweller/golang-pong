@@ -53,7 +53,8 @@ func BigTextDraw(state GameState, color color.Color, screen *ebiten.Image) {
 	case Key:
 		textT = []string{
 			"",
-			"Player",
+			"PONG",
+			"",
 			"W = Up",
 			"S = Down",
 			"",
@@ -67,12 +68,18 @@ func BigTextDraw(state GameState, color color.Color, screen *ebiten.Image) {
 			"Space = start game",
 			"",
 		}
+	case Pause:
+		textT = []string{
+			"",
+			"Paused",
+			"",
+			"Space to resume",
+		}
 	case GameOver:
 		textT = []string{
 			"",
 			"Game Over",
-			"Esc = quit",
-			"Space = play again",
+			"Space to play again",
 		}
 		for i, length := range textT {
 			s := (screenWidth - len(length)*fontSize) / 2

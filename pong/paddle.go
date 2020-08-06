@@ -3,15 +3,17 @@ package pong
 import (
 	"image/color"
 	"log"
+	"strconv"
 
 	"golang.org/x/image/font"
 
 	"github.com/hajimehoshi/ebiten"
 	"github.com/hajimehoshi/ebiten/inpututil"
+	"github.com/hajimehoshi/ebiten/text"
 )
 
 type currentScore struct {
-	score int
+	Score int
 	x     float64
 	y     float64
 	print bool
@@ -96,6 +98,11 @@ func (p *Paddle) Draw(screen *ebiten.Image, f font.Face) {
 	p.Paddle.Fill(color.White)
 	screen.DrawImage(p.Paddle, paddle)
 
+	p.CurrentScore.x = p.X + (Center(screen).X-p.X)/2
+	p.CurrentScore.y = 2 * 20
+
+	s := strconv.Itoa(p.CurrentScore.Score)
+	text.Draw(screen, s, Font, int(p.CurrentScore.x), int(p.CurrentScore.y), PaddleBall)
 }
 
 //PaddleControls defines the InPlay actions of the paddles
@@ -103,11 +110,12 @@ func (p *Paddle) PaddleControls(screen *ebiten.Image) {
 	var err error
 	Opts := &ebiten.DrawImageOptions{}
 	Opts.GeoM.Translate(p.X, p.Y)
-	if err = screen.DrawImage(draw, Opts); err != nil {
+	if err = screen.DrawImage(screen, Opts); err != nil {
 		log.Print(err)
 	}
 }
 
+//AI that is hard to beat
 func (p *Paddle) AI(b *Ball) {
-	p.Y = b.Y
+	p.Y = b.X
 }
