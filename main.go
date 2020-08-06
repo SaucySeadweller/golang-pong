@@ -2,9 +2,9 @@ package main
 
 import (
 	"github.com/SaucySeadweller/golang-pong/pong"
-	"github.com/hajimehoshi/ebiten/inpututil"
 
 	"github.com/hajimehoshi/ebiten"
+	"github.com/hajimehoshi/ebiten/inpututil"
 )
 
 //Game is a struct that defines Games attributes
@@ -102,6 +102,31 @@ func (g *Game) draw(screen *ebiten.Image) error {
 //Update updates the screen
 func (g *Game) Update(screen *ebiten.Image) error {
 	g.init(screen)
+	g.stateSwitch(screen)
+	g.draw(screen)
+
+	return nil
+}
+
+func (g *Game) reset(screen *ebiten.Image, state pong.GameState) {
+	w, _ := screen.Size()
+	g.state = state
+	g.speed = 0
+
+	if state == pong.Setup {
+		g.player.Score = 0
+		g.ai.Score = 0
+	}
+	g.player.Pos = pong.Pos{
+		X: pong.PaddleStart, Y: pong.Center(screen).Y}
+	g.ai.Pos = pong.Pos{
+		X: float64(w - pong.PaddleStart - pong.PaddleWidth), Y: pong.Center(screen).Y}
+	g.ball.Pos = pong.Center(screen)
+	g.ball.VelX = vel
+	g.ball.VelY = vel
+}
+
+func (g *Game) stateSwitch(screen *ebiten.Image) {
 	switch g.state {
 	case pong.Setup:
 		if inpututil.IsKeyJustPressed(ebiten.KeySpace) {
@@ -127,44 +152,21 @@ func (g *Game) Update(screen *ebiten.Image) error {
 		g.ai.AI(g.ball)
 		g.ai.Update(screen)
 
-		ballVelX := g.ball.VelX
 		g.ball.Update(screen, g.player, g.ai)
 
-		if ballVelX*g.ball.VelX < 0 {
-			if g.ball.X >= float64(width) || g.ball.X < 0 {
-				g.player.Score++
-				g.reset(screen, pong.Play)
-			} else if g.ball.X > float64(width) {
-				g.player.CurrentScore.Score++
-			}
-
+		if g.ball.X >= float64(width) || g.ball.X < 0 {
+			g.player.Score++
+			g.reset(screen, pong.Play)
+		} else if g.ball.X > float64(width) {
+			g.player.CurrentScore.Score++
+			g.reset(screen, pong.Play)
 		}
+
 	case pong.GameOver:
 		if inpututil.IsKeyJustPressed(ebiten.KeySpace) {
 			g.reset(screen, pong.Setup)
 		}
 	}
-	g.draw(screen)
-
-	return nil
-}
-
-func (g *Game) reset(screen *ebiten.Image, state pong.GameState) {
-	w, _ := screen.Size()
-	g.state = state
-	g.speed = 0
-
-	if state == pong.Setup {
-		g.player.Score = 0
-		g.ai.Score = 0
-	}
-	g.player.Pos = pong.Pos{
-		X: pong.PaddleStart, Y: pong.Center(screen).Y}
-	g.ai.Pos = pong.Pos{
-		X: float64(w - pong.PaddleStart - pong.PaddleWidth), Y: pong.Center(screen).Y}
-	g.ball.Pos = pong.Center(screen)
-	g.ball.VelX = vel
-	g.ball.VelY = vel
 }
 
 func main() {

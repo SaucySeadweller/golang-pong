@@ -117,5 +117,5 @@ func (p *Paddle) PaddleControls(screen *ebiten.Image) {
 
 //AI that is hard to beat
 func (p *Paddle) AI(b *Ball) {
-	p.Y = b.X
+	p.Y = b.Y
 }
