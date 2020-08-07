@@ -9,19 +9,6 @@ import (
 //GameState determines what the game does depending on it's current state
 type GameState byte
 
-const (
-	//Setup preps the game state
-	Setup GameState = iota
-	//Play is the game state while playing
-	Play
-	//Pause is the gamestate while not playing
-	Pause
-	//GameOver is the state when the game ends
-	GameOver
-	//Key is the state while controlling
-	Key
-)
-
 //Ball defines the attributes of the ball entity
 type Ball struct {
 	Pos
@@ -40,7 +27,8 @@ const (
 	//BallVelX determines the starting velocity of the ball across the X axis
 	BallVelX = 2
 	//BallVelY determines the starting velocity of the ball across the Y axis
-	BallVelY  = 2
+	BallVelY = 2
+	//BallStart is the balls starting position  on screen
 	BallStart = 50
 )
 
@@ -71,12 +59,4 @@ func (b *Ball) Update(screen *ebiten.Image, playerPaddle *Paddle, aiPaddle *Padd
 		b.X = aiPaddle.X - float64(aiPaddle.Width/2) - b.Radius
 	}
 
-}
-
-//Draw draws the ball
-func (b *Ball) Draw(screen *ebiten.Image) {
-	ballOptions := &ebiten.DrawImageOptions{}
-	ballOptions.GeoM.Translate(b.X, b.Y)
-	b.Ball.Fill(PaddleBall)
-	screen.DrawImage(b.Ball, ballOptions)
 }

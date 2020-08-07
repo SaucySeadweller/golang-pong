@@ -1,11 +1,9 @@
 package pong
 
 import (
-	"image/color"
 	"log"
 
 	"github.com/hajimehoshi/ebiten/examples/resources/fonts"
-	"github.com/hajimehoshi/ebiten/text"
 
 	"github.com/golang/freetype/truetype"
 	"github.com/hajimehoshi/ebiten"
@@ -41,67 +39,6 @@ func InitFont() {
 		DPI:     dpi,
 		Hinting: font.HintingFull,
 	})
-}
-
-//BigTextDraw draws the big text
-func BigTextDraw(state GameState, color color.Color, screen *ebiten.Image) {
-
-	screenWidth, _ := screen.Size()
-	var textT []string
-
-	switch state {
-	case Key:
-		textT = []string{
-			"",
-			"PONG",
-			"",
-			"W = Up",
-			"S = Down",
-			"",
-		}
-	case Setup:
-		textT = []string{
-			"",
-			"PONG",
-			"",
-			"C = Controls",
-			"Space = start game",
-			"",
-		}
-	case Pause:
-		textT = []string{
-			"",
-			"Paused",
-			"",
-			"Space to resume",
-		}
-	case GameOver:
-		textT = []string{
-			"",
-			"Game Over",
-			"Space to play again",
-		}
-		for i, length := range textT {
-			s := (screenWidth - len(length)*fontSize) / 2
-			text.Draw(screen, length, Font, s, (i+4)*fontSize, color)
-		}
-
-	}
-}
-
-//TextDraw draws little text on the screen
-func TextDraw(state GameState, color color.Color, screen *ebiten.Image) {
-	screenWidth, screenHeight := screen.Size()
-	message := []string{}
-	if state == Play || state == Key || state == Setup {
-		message = append(message, "PONG")
-	}
-	for i, length := range message {
-		s := (screenWidth - len(length)*smallSize) / 2
-
-		text.Draw(screen, length, Font, s, screenHeight-500+(i-2)*fontSize, color)
-
-	}
 }
 
 //Center finds the center of the screen
